@@ -1,68 +1,17 @@
-import { useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import { useState } from "react";
 import ResortMap from "./components/ResortMap";
 import type { Tile } from "./components/ResortMap";
+import BookingModal from "./components/BookingModal";
+import { useMap } from "./hooks/useMap";
 import "./App.css";
 
-type MapResponse = {
-  map: {
-    width: number;
-    height: number;
-    tiles: Tile[];
-  };
-};
-
-type ApiError = {
-  error?: string;
-};
-
-const API_BASE_URL = "http://localhost:3001";
-
 function App() {
-  const [tiles, setTiles] = useState<Tile[]>([]);
-  const [mapWidth, setMapWidth] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { tiles, mapWidth, isLoading, error, refreshMap } = useMap();
   const [selectedCabana, setSelectedCabana] = useState<Tile | null>(null);
-  const [guestName, setGuestName] = useState("");
-  const [roomNumber, setRoomNumber] = useState("");
-  const [bookingError, setBookingError] = useState<string | null>(null);
-  const [isBooking, setIsBooking] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-
-  async function loadMap() {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/api/map-data`);
-
-      if (!response.ok) {
-        throw new Error("Failed to load map data.");
-      }
-
-      const data = (await response.json()) as MapResponse;
-      setTiles(data.map.tiles);
-      setMapWidth(data.map.width);
-    } catch (fetchError) {
-      setError(
-        fetchError instanceof Error
-          ? fetchError.message
-          : "Unknown error while loading map.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadMap();
-  }, []);
 
   function closeModal() {
     setSelectedCabana(null);
-    setGuestName("");
-    setRoomNumber("");
-    setBookingError(null);
   }
 
   function showNotice(message: string) {
@@ -72,85 +21,9 @@ function App() {
     }, 2000);
   }
 
-  async function submitCabanaBooking(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!selectedCabana) {
-      return;
-    }
-
-    setIsBooking(true);
-    setBookingError(null);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/book`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          room: roomNumber,
-          guestName,
-          x: selectedCabana.x,
-          y: selectedCabana.y,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorBody = (await response.json()) as ApiError;
-        throw new Error(errorBody.error ?? "Booking failed.");
-      }
-
-      closeModal();
-      await loadMap();
-      showNotice("Booking completed.");
-    } catch (bookingRequestError) {
-      setBookingError(
-        bookingRequestError instanceof Error
-          ? bookingRequestError.message
-          : "Unknown booking error.",
-      );
-    } finally {
-      setIsBooking(false);
-    }
-  }
-
-  async function cancelCabanaBooking() {
-    if (!selectedCabana) {
-      return;
-    }
-
-    setIsBooking(true);
-    setBookingError(null);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/book`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          room: roomNumber,
-          guestName,
-          x: selectedCabana.x,
-          y: selectedCabana.y,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorBody = (await response.json()) as ApiError;
-        throw new Error(errorBody.error ?? "Cancel failed.");
-      }
-
-      closeModal();
-      await loadMap();
-      showNotice("Booking cancelled.");
-    } catch (cancelError) {
-      setBookingError(
-        cancelError instanceof Error ? cancelError.message : "Unknown cancel error.",
-      );
-    } finally {
-      setIsBooking(false);
-    }
+  async function handleBookingSuccess(message: string) {
+    await refreshMap();
+    showNotice(message);
   }
 
   if (isLoading) {
@@ -173,88 +46,11 @@ function App() {
       />
 
       {selectedCabana ? (
-        <div className="modal-overlay" role="presentation" onClick={closeModal}>
-          <div
-            className="modal-content"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Cabana booking form"
-            onClick={(event) => event.stopPropagation()}
-          >
-            {selectedCabana.booked ? (
-              <>
-                <h2>Cabana ({selectedCabana.x}, {selectedCabana.y})</h2>
-                <p className="booked-info">
-                  Booked by {selectedCabana.bookedByGuestName ?? "Unknown"}
-                </p>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    void cancelCabanaBooking();
-                  }}
-                  className="booking-form"
-                >
-                  <label>
-                    Guest name
-                    <input
-                      value={guestName}
-                      onChange={(event) => setGuestName(event.target.value)}
-                      required
-                    />
-                  </label>
-                  <label>
-                    Room number
-                    <input
-                      value={roomNumber}
-                      onChange={(event) => setRoomNumber(event.target.value)}
-                      required
-                    />
-                  </label>
-                  {bookingError ? <p className="booking-error">{bookingError}</p> : null}
-                  <div className="modal-actions">
-                    <button type="button" onClick={closeModal} disabled={isBooking}>
-                      Close
-                    </button>
-                    <button type="submit" disabled={isBooking}>
-                      {isBooking ? "Cancelling..." : "Cancel booking"}
-                    </button>
-                  </div>
-                </form>
-              </>
-            ) : (
-              <>
-                <h2>Book cabana ({selectedCabana.x}, {selectedCabana.y})</h2>
-                <form onSubmit={submitCabanaBooking} className="booking-form">
-                  <label>
-                    Guest name
-                    <input
-                      value={guestName}
-                      onChange={(event) => setGuestName(event.target.value)}
-                      required
-                    />
-                  </label>
-                  <label>
-                    Room number
-                    <input
-                      value={roomNumber}
-                      onChange={(event) => setRoomNumber(event.target.value)}
-                      required
-                    />
-                  </label>
-                  {bookingError ? <p className="booking-error">{bookingError}</p> : null}
-                  <div className="modal-actions">
-                    <button type="button" onClick={closeModal} disabled={isBooking}>
-                      Cancel
-                    </button>
-                    <button type="submit" disabled={isBooking}>
-                      {isBooking ? "Booking..." : "Submit"}
-                    </button>
-                  </div>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
+        <BookingModal
+          selectedCabana={selectedCabana}
+          onClose={closeModal}
+          onSuccess={handleBookingSuccess}
+        />
       ) : null}
     </main>
   );

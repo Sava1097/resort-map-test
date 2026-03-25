@@ -1,38 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMapData } from "../api";
 import type { Tile } from "../components/ResortMap";
 
+const MAP_QUERY_KEY = ["map-data"] as const;
+
 export function useMap() {
-  const [tiles, setTiles] = useState<Tile[]>([]);
-  const [mapWidth, setMapWidth] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const refreshMap = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const data = await fetchMapData();
-      setTiles(data.map.tiles);
-      setMapWidth(data.map.width);
-    } catch (mapError) {
-      setError(
-        mapError instanceof Error ? mapError.message : "Unknown error while loading map.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const { data, isLoading, error } = useQuery({
+    queryKey: MAP_QUERY_KEY,
+    queryFn: fetchMapData,
+  });
 
-  useEffect(() => {
-    void refreshMap();
-  }, [refreshMap]);
+  const refreshMap = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: MAP_QUERY_KEY });
+  }, [queryClient]);
+
+  const tiles = (data?.map.tiles ?? []) as Tile[];
+  const mapWidth = data?.map.width ?? 0;
+  const errorMessage =
+    error instanceof Error ? error.message : error ? String(error) : null;
 
   return {
     tiles,
     mapWidth,
     isLoading,
-    error,
+    error: errorMessage,
     refreshMap,
   };
 }

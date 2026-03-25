@@ -6,7 +6,7 @@ import { useMap } from "./hooks/useMap";
 import "./App.css";
 
 function App() {
-  const { tiles, mapWidth, isLoading, error, refreshMap } = useMap();
+  const { tiles, mapWidth, isLoading, error } = useMap();
   const [selectedCabana, setSelectedCabana] = useState<Tile | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -21,8 +21,7 @@ function App() {
     }, 2000);
   }
 
-  async function handleBookingSuccess(message: string) {
-    await refreshMap();
+  function handleBookingSuccess(message: string) {
     showNotice(message);
   }
 

@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { z } from "zod";
 import type { FormEvent } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookCabana, cancelBooking } from "../api";
 import type { Tile } from "./ResortMap";
 
@@ -15,46 +17,102 @@ function BookingModal({ selectedCabana, onClose, onSuccess }: BookingModalProps)
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
 
-  async function handleBook(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsBooking(true);
-    setBookingError(null);
+  const queryClient = useQueryClient();
+  const MAP_QUERY_KEY = ["map-data"] as const;
 
-    try {
-      await bookCabana({
-        room: roomNumber,
-        guestName,
+  const formSchema = z.object({
+    guestName: z.string().trim().min(1, "Guest name is required."),
+    roomNumber: z
+      .string()
+      .trim()
+      .min(1, "Room number is required.")
+      .regex(/^[0-9]+$/, "Room number must be a number."),
+  });
+
+  const bookMutation = useMutation({
+    mutationFn: async (payload: { guestName: string; roomNumber: string }) => {
+      return bookCabana({
+        room: payload.roomNumber,
+        guestName: payload.guestName,
         x: selectedCabana.x,
         y: selectedCabana.y,
       });
+    },
+    onMutate: () => {
+      setIsBooking(true);
+      setBookingError(null);
+    },
+    onSuccess: async () => {
       await onSuccess("Booking completed.");
+      await queryClient.invalidateQueries({ queryKey: MAP_QUERY_KEY });
       onClose();
-    } catch (error) {
+    },
+    onError: (error) => {
       setBookingError(error instanceof Error ? error.message : "Unknown booking error.");
-    } finally {
       setIsBooking(false);
+    },
+    onSettled: () => {
+      setIsBooking(false);
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: async (payload: { guestName: string; roomNumber: string }) => {
+      return cancelBooking({
+        room: payload.roomNumber,
+        guestName: payload.guestName,
+        x: selectedCabana.x,
+        y: selectedCabana.y,
+      });
+    },
+    onMutate: () => {
+      setIsBooking(true);
+      setBookingError(null);
+    },
+    onSuccess: async () => {
+      await onSuccess("Booking cancelled.");
+      await queryClient.invalidateQueries({ queryKey: MAP_QUERY_KEY });
+      onClose();
+    },
+    onError: (error) => {
+      setBookingError(error instanceof Error ? error.message : "Unknown cancel error.");
+      setIsBooking(false);
+    },
+    onSettled: () => {
+      setIsBooking(false);
+    },
+  });
+
+  function validateForm() {
+    const result = formSchema.safeParse({ guestName, roomNumber });
+    if (!result.success) {
+      return result.error.issues[0]?.message ?? "Invalid form data.";
     }
+    return null;
   }
 
-  async function handleCancel(event: FormEvent<HTMLFormElement>) {
+  function handleBook(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsBooking(true);
-    setBookingError(null);
-
-    try {
-      await cancelBooking({
-        room: roomNumber,
-        guestName,
-        x: selectedCabana.x,
-        y: selectedCabana.y,
-      });
-      await onSuccess("Booking cancelled.");
-      onClose();
-    } catch (error) {
-      setBookingError(error instanceof Error ? error.message : "Unknown cancel error.");
-    } finally {
-      setIsBooking(false);
+    const validationError = validateForm();
+    if (validationError) {
+      setBookingError(validationError);
+      return;
     }
+
+    bookMutation.mutate({ guestName, roomNumber });
+  }
+
+  function handleCancel(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const cancelGuestName = selectedCabana.bookedByGuestName;
+    const cancelRoomNumber = selectedCabana.bookedByRoom;
+
+    if (!cancelGuestName || !cancelRoomNumber) {
+      setBookingError("Cannot cancel: booking owner info is missing.");
+      return;
+    }
+
+    cancelMutation.mutate({ guestName: cancelGuestName, roomNumber: cancelRoomNumber });
   }
 
   const isBooked = Boolean(selectedCabana.booked);
@@ -77,22 +135,6 @@ function BookingModal({ selectedCabana, onClose, onSuccess }: BookingModalProps)
               Booked by {selectedCabana.bookedByGuestName ?? "Unknown"}
             </p>
             <form onSubmit={handleCancel} className="booking-form">
-              <label>
-                Guest name
-                <input
-                  value={guestName}
-                  onChange={(event) => setGuestName(event.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Room number
-                <input
-                  value={roomNumber}
-                  onChange={(event) => setRoomNumber(event.target.value)}
-                  required
-                />
-              </label>
               {bookingError ? <p className="booking-error">{bookingError}</p> : null}
               <div className="modal-actions">
                 <button type="button" onClick={onClose} disabled={isBooking}>

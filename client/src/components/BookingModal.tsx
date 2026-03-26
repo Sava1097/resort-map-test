@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
-import type { FormEvent } from "react";
+import type { FormEventHandler } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookCabana, cancelBooking } from "../api";
 import type { Tile } from "./ResortMap";
@@ -91,7 +91,7 @@ function BookingModal({ selectedCabana, onClose, onSuccess }: BookingModalProps)
     return null;
   }
 
-  function handleBook(event: FormEvent<HTMLFormElement>) {
+  const handleBook: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const validationError = validateForm();
     if (validationError) {
@@ -100,9 +100,9 @@ function BookingModal({ selectedCabana, onClose, onSuccess }: BookingModalProps)
     }
 
     bookMutation.mutate({ guestName, roomNumber });
-  }
+  };
 
-  function handleCancel(event: FormEvent<HTMLFormElement>) {
+  const handleCancel: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const cancelGuestName = selectedCabana.bookedByGuestName;
     const cancelRoomNumber = selectedCabana.bookedByRoom;
@@ -113,7 +113,7 @@ function BookingModal({ selectedCabana, onClose, onSuccess }: BookingModalProps)
     }
 
     cancelMutation.mutate({ guestName: cancelGuestName, roomNumber: cancelRoomNumber });
-  }
+  };
 
   const isBooked = Boolean(selectedCabana.booked);
 

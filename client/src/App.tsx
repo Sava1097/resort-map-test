@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ResortMap from "./components/ResortMap";
 import type { Tile } from "./components/ResortMap";
-import BookingModal from "./components/BookingModal";
+import { BookingModal } from "./components/BookingModal";
 import { useMap } from "./hooks/useMap";
 import "./App.css";
 

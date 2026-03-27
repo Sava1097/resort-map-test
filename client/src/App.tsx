@@ -37,20 +37,20 @@ function App() {
     <main className="app-shell">
       <h1>Resort Map</h1>
       <p className="legend">W: cabana, p: pool, #: path, c: chalet, .: empty</p>
-      {notice ? <p className="notice-message">{notice}</p> : null}
+      {notice && <p className="notice-message">{notice}</p>}
       <ResortMap
         width={mapWidth}
         tiles={tiles}
         onCabanaClick={(tile) => setSelectedCabana(tile)}
       />
 
-      {selectedCabana ? (
+      {selectedCabana && (
         <BookingModal
           selectedCabana={selectedCabana}
           onClose={closeModal}
           onSuccess={handleBookingSuccess}
         />
-      ) : null}
+      )}
     </main>
   );
 }

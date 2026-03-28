@@ -3,9 +3,10 @@ interface CancelFormProps {
   onCancel: () => void 
   isPending: boolean
   error: string | null 
+  onClose: () => void
 }
 
-export const CancelForm = ({ guestName, onCancel, isPending, error }: CancelFormProps) => {
+export const CancelForm = ({ guestName, onCancel, isPending, error, onClose }: CancelFormProps) => {
   return (
     <div>
       <p>Booked by: {guestName}</p>
@@ -13,10 +14,15 @@ export const CancelForm = ({ guestName, onCancel, isPending, error }: CancelForm
         e.preventDefault()
         onCancel()
       }}>
+        
         {error && <p className="booking-error">{error}</p>}
-        <button type="submit" className="btn-cancel" disabled={isPending}>
-          {isPending ? "Cancelling..." : "Cancel Booking"}
-        </button>
+
+        <div className="modal-actions">
+          <button type="button" onClick={onClose}>Close</button>
+          <button type="submit" className="btn-cancel" disabled={isPending}>
+            {isPending ? "Cancelling..." : "Cancel Booking"}
+          </button>
+        </div>  
       </form>
     </div>
   );

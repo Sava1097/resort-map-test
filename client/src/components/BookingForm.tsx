@@ -4,7 +4,8 @@ import { z } from "zod";
 interface BookingFormProps  {
   onSubmit: (data: {guestName: string, roomNumber: string}) => void;
   isPending: boolean;
-  error: string | null
+  error: string | null;
+  onClose: () => void
 }
 
 const bookingSchema = z.object({
@@ -12,7 +13,7 @@ const bookingSchema = z.object({
   roomNumber: z.string().trim().min(1, "Room is required").regex(/^[0-9]+$/, "Must be a number")
 });
 
-export const BookingForm = ({ onSubmit, isPending, error }: BookingFormProps) => {
+export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormProps) => {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
@@ -54,6 +55,7 @@ export const BookingForm = ({ onSubmit, isPending, error }: BookingFormProps) =>
       {(error || localError) && <p className="booking-error">{error || localError}</p>}
 
       <div className="modal-actions">
+        <button type="button" className="close-button" onClick={onClose}>Close</button>
         <button type="submit" disabled={isPending}>
           {isPending ? "Booking..." : "Submit"} 
         </button>

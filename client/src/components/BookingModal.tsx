@@ -48,13 +48,13 @@ export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModa
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>&times;</button>
         
         {!selectedCabana.booked && (
           <>
             <h2>Book cabana ({selectedCabana.x}, {selectedCabana.y})</h2>
             <BookingForm 
-              onSubmit={(data: { guestName: string; roomNumber: string }) => 
+              onClose={onClose}
+              onSubmit={(data: { guestName: string; roomNumber: string}) => 
                 mutation.mutate({ type: "book", ...data })
               }
               isPending={mutation.isPending}
@@ -67,6 +67,7 @@ export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModa
           <>
             <h2>Cabana ({selectedCabana.x}, {selectedCabana.y})</h2>
             <CancelForm 
+              onClose={onClose}
               guestName={selectedCabana.bookedByGuestName}
               onCancel={() => mutation.mutate({ 
                 type: "cancel", 

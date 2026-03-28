@@ -36,7 +36,9 @@ function App() {
   return (
     <main className="app-shell">
       <h1>Resort Map</h1>
-      <p className="legend">W: cabana, p: pool, #: path, c: chalet, .: empty</p>
+      <p className="legend">
+        <span>Cabana</span> | <span>Pool</span> | <span>Path</span> | <span>Chalet</span>
+      </p>
       {notice && <p className="notice-message">{notice}</p>}
       <ResortMap
         width={mapWidth}

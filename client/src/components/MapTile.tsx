@@ -35,15 +35,14 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
   const isBookedCabana = isCabana && tile.booked;
   const imageSrc = tileImageMap[tile.type];
 
-  const tooltipText = isBookedCabana ? "Booked" : undefined
-
   return (
     <button
       className={`tile tile-${tile.type} ${isCabana ? "is-clickable" : ""} ${
         isBookedCabana ? "is-booked" : ""
       }`}
+      disabled={isBookedCabana}
       type="button"
-      title={tooltipText}
+      title={isBookedCabana ? "Booked" : undefined}
       aria-label={`${tileLabel} at (${tile.x}, ${tile.y})`}
       onClick={() => {
         if (isCabana) {

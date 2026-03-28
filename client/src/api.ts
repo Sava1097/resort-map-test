@@ -47,15 +47,3 @@ export async function bookCabana(payload: BookingPayload): Promise<void> {
     await parseError(response, "Booking failed.");
   }
 }
-
-export async function cancelBooking(payload: BookingPayload): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/book`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    await parseError(response, "Cancel failed.");
-  }
-}

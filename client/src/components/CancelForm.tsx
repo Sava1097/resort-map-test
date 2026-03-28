@@ -8,13 +8,13 @@ interface CancelFormProps {
 
 export const CancelForm = ({ guestName, onCancel, isPending, error, onClose }: CancelFormProps) => {
   return (
-    <div>
+    <>
       <p>Booked by: {guestName}</p>
-      <form onSubmit={(e) => {
+      <form className="booking-form" onSubmit={(e) => {
         e.preventDefault()
         onCancel()
       }}>
-        
+
         {error && <p className="booking-error">{error}</p>}
 
         <div className="modal-actions">
@@ -24,6 +24,6 @@ export const CancelForm = ({ guestName, onCancel, isPending, error, onClose }: C
           </button>
         </div>  
       </form>
-    </div>
+    </>
   );
 }

@@ -41,7 +41,7 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
     <button
       className={cn(
         "aspect-square border border-black/15 p-0 flex items-center justify-center transition-all duration-200",
-        isCabana ? "cursor-pointer hover:scale-105" : "",
+        isCabana ? "hover:scale-105" : "cursor-default",
         isBookedCabana ? "bg-red-500 opacity-50 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
       )}
       disabled={isBookedCabana}

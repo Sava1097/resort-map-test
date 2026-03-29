@@ -8,7 +8,6 @@ interface BookingFormProps  {
   onSubmit: (data: {guestName: string, roomNumber: string}) => void;
   isPending: boolean;
   error: string | null;
-  onClose: () => void
 }
 
 const bookingSchema = z.object({
@@ -16,7 +15,7 @@ const bookingSchema = z.object({
   roomNumber: z.string().trim().min(1, "Room is required").regex(/^[0-9]+$/, "Must be a number")
 });
 
-export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormProps) => {
+export const BookingForm = ({ onSubmit, isPending, error}: BookingFormProps) => {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
@@ -35,9 +34,9 @@ export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2 text-left">
-        <Label htmlFor="guest-name">Guest Name</Label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6 py-2">
+      <div className="flex flex-col gap-2.5">
+        <Label className="text-xl" htmlFor="guest-name">Guest Name</Label>
         <Input
           id="guest-name"
           value={name}
@@ -46,8 +45,8 @@ export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormP
           required
         />
       </div>
-      <div className="flex flex-col gap-2 text-left">
-        <Label htmlFor="room-number">Room Number</Label>
+      <div className="flex flex-col gap-2.5">
+        <Label className="text-xl" htmlFor="room-number">Room Number</Label>
         <Input
           id="room-number"
           value={room}
@@ -59,9 +58,11 @@ export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormP
 
       {(error || localError) && <p className="m-0 text-left text-sm text-red-600">{error || localError}</p>}
 
-      <div className="mt-1 flex justify-end gap-2">
-        <Button className="hover:cursor-pointer" type="button" variant="outline" onClick={onClose}>Close</Button>
-        <Button className="hover:cursor-pointer" type="submit" disabled={isPending}>
+      <div className="flex justify-end gap-2">
+        <Button 
+          className="w-full lg:text-xl transition-all hover:bg-zinc-800 active:scale-95 py-6" 
+          type="submit" 
+          disabled={isPending}>
           {isPending ? "Booking..." : "Submit"} 
         </Button>
       </div>

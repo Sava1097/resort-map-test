@@ -31,12 +31,11 @@ export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModa
 
   return (
     <Dialog open={!!selectedCabana} onOpenChange={() => onClose()}>
-      <DialogContent>
+      <DialogContent className="lg: p-5">
         <DialogHeader>
-          <DialogTitle>Book cabana ({selectedCabana.x}, {selectedCabana.y})</DialogTitle>
+          <DialogTitle className="text-xl text-center text-">Book cabana ({selectedCabana.x}, {selectedCabana.y})</DialogTitle>
         </DialogHeader>
         <BookingForm 
-          onClose={onClose}
           onSubmit={(data) => mutation.mutate(data)}
           isPending={mutation.isPending}
           error={mutation.error instanceof Error ? mutation.error.message : null}

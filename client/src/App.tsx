@@ -26,9 +26,9 @@ function App() {
   }
 
   return (
-    <main className="p-6 flex flex-col justify-center items-center">
-      <h1 className="mb-3 text-4xl font-semibold">Resort Map</h1>
-      <p className="mb-4">
+    <main className="p-6 flex flex-col justify-center items-center gap-4">
+      <h1 className="text-4xl font-semibold">Resort Map</h1>
+      <p className="">
         <span>Cabana</span> | <span>Pool</span> | <span>Path</span> | <span>Chalet</span>
       </p>
       <ResortMap

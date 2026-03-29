@@ -1,3 +1,5 @@
+import { cn } from "../lib/utils";
+
 export type Tile = {
   x: number;
   y: number;
@@ -37,9 +39,11 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
 
   return (
     <button
-      className={`tile tile-${tile.type} ${isCabana ? "is-clickable" : ""} ${
-        isBookedCabana ? "is-booked" : ""
-      }`}
+      className={cn(
+        "aspect-square border border-black/15 p-0 flex items-center justify-center transition-all duration-200",
+        isCabana ? "cursor-pointer hover:scale-105" : "",
+        isBookedCabana ? "bg-red-500 opacity-50 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+      )}
       disabled={isBookedCabana}
       type="button"
       title={isBookedCabana ? "Booked" : undefined}
@@ -51,7 +55,7 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
       }}
     >
       {imageSrc ? (
-        <img src={imageSrc} alt={tileLabel} className="tile-image" />
+        <img src={imageSrc} alt={tileLabel} className="h-full w-full object-cover" />
       ) : (
         <span>{tile.type}</span>
       )}

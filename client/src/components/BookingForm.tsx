@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { z } from "zod";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface BookingFormProps  {
   onSubmit: (data: {guestName: string, roomNumber: string}) => void;
@@ -32,33 +35,35 @@ export const BookingForm = ({ onSubmit, isPending, error,onClose }: BookingFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="booking-form">
-      <label>
-        Guest Name
-        <input 
-          value={name} 
-          onChange={e => setName(e.target.value)} 
-          placeholder="Enter full name" 
-          required 
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 text-left">
+        <Label htmlFor="guest-name">Guest Name</Label>
+        <Input
+          id="guest-name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Enter full name"
+          required
         />
-      </label>
-      <label>
-        Room Number
-        <input 
-          value={room} 
-          onChange={e => setRoom(e.target.value)} 
-          placeholder="Enter room" 
-          required 
+      </div>
+      <div className="flex flex-col gap-2 text-left">
+        <Label htmlFor="room-number">Room Number</Label>
+        <Input
+          id="room-number"
+          value={room}
+          onChange={e => setRoom(e.target.value)}
+          placeholder="Enter room"
+          required
         />
-      </label>
+      </div>
 
-      {(error || localError) && <p className="booking-error">{error || localError}</p>}
+      {(error || localError) && <p className="m-0 text-left text-sm text-red-600">{error || localError}</p>}
 
-      <div className="modal-actions">
-        <button type="button" className="close-button" onClick={onClose}>Close</button>
-        <button type="submit" disabled={isPending}>
+      <div className="mt-1 flex justify-end gap-2">
+        <Button className="hover:cursor-pointer" type="button" variant="outline" onClick={onClose}>Close</Button>
+        <Button className="hover:cursor-pointer" type="submit" disabled={isPending}>
           {isPending ? "Booking..." : "Submit"} 
-        </button>
+        </Button>
       </div>
     </form>
   );

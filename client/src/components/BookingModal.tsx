@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookCabana} from "../api";
 import type { Tile } from "./ResortMap";
 import { BookingForm } from "./BookingForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 type BookingModalProps = {
   selectedCabana: Tile;
@@ -29,16 +30,18 @@ export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModa
   });
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <h2>Book cabana ({selectedCabana.x}, {selectedCabana.y})</h2>
+    <Dialog open={!!selectedCabana} onOpenChange={() => onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Book cabana ({selectedCabana.x}, {selectedCabana.y})</DialogTitle>
+        </DialogHeader>
         <BookingForm 
           onClose={onClose}
           onSubmit={(data) => mutation.mutate(data)}
           isPending={mutation.isPending}
           error={mutation.error instanceof Error ? mutation.error.message : null}
         />
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };

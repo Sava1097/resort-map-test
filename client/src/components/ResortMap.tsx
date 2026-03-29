@@ -9,7 +9,7 @@ type ResortMapProps = {
 const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
   return (
     <div
-      className="resort-grid"
+      className="mx-auto grid w-full max-w-[980px] gap-2"
       style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}
     >
       {tiles.map((tile) => (

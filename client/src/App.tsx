@@ -3,6 +3,7 @@ import ResortMap from "./components/ResortMap";
 import type { Tile } from "./components/ResortMap";
 import { BookingModal } from "./components/BookingModal";
 import { useMap } from "./hooks/useMap";
+import { FirstLoading } from "./components/FirstLoading";
 
 function App() {
   const { tiles, mapWidth, isLoading, error } = useMap();
@@ -12,9 +13,7 @@ function App() {
     setSelectedCabana(null);
   }
 
-  if (isLoading) {
-    return <main className="p-6">Loading map...</main>;
-  }
+  if (isLoading) return <main className="min-h-svh flex justify-center p-5"><FirstLoading/></main>
 
   if (error) {
     return <main className="p-6">Error: {error}</main>;

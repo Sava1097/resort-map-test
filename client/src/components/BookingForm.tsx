@@ -1,19 +1,14 @@
 import { useState } from "react";
-import { z } from "zod";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { bookingSchema, type BookingValues } from "@/lib/validations";
 
 interface BookingFormProps  {
-  onSubmit: (data: {guestName: string, roomNumber: string}) => void;
+  onSubmit: (data: BookingValues) => void;
   isPending: boolean;
   error: string | null;
 }
-
-const bookingSchema = z.object({
-  guestName: z.string().trim().min(1, "Name is required"),
-  roomNumber: z.string().trim().min(1, "Room is required").regex(/^[0-9]+$/, "Must be a number")
-});
 
 export const BookingForm = ({ onSubmit, isPending, error}: BookingFormProps) => {
   const [name, setName] = useState("");
@@ -30,7 +25,9 @@ export const BookingForm = ({ onSubmit, isPending, error}: BookingFormProps) => 
       setLocalError(result.error.issues[0].message)
       return;
     }
-    onSubmit({ guestName: name, roomNumber: room });
+
+    const values: BookingValues = { guestName: name, roomNumber: room };
+    onSubmit(values);
   };
 
   return (

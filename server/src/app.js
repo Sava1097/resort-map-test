@@ -117,6 +117,18 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
         return res.status(401).json({ error: "Guest not found." });
       }
 
+      const alreadyHasBooking = Array.from(bookedCabanas.values()).some(
+        (b) => 
+          b.room === String(room).trim() && 
+          b.guestName.toLowerCase() === String(guestName).trim().toLowerCase()
+    );
+
+      if (alreadyHasBooking) {
+        return res.status(400).json({ 
+          error: `Guest ${guestName} from room ${room} already has an active booking. One cabana per room/guest only.` 
+        });
+      }
+
       const key = bookingKey(x, y);
       if (bookedCabanas.has(key)) {
         return res.status(400).json({ error: "Cabana is already booked." });

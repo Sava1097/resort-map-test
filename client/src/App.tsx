@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast } from "sonner";
 import ResortMap from "./components/ResortMap";
 import type { Tile } from "./components/ResortMap";
 import { BookingModal } from "./components/BookingModal";
@@ -11,10 +10,6 @@ function App() {
 
   function closeModal() {
     setSelectedCabana(null);
-  }
-
-  function handleBookingSuccess(message: string) {
-    toast.success(message);
   }
 
   if (isLoading) {
@@ -41,7 +36,6 @@ function App() {
         <BookingModal
           selectedCabana={selectedCabana}
           onClose={closeModal}
-          onSuccess={handleBookingSuccess}
         />
       )}
     </main>

@@ -27,7 +27,7 @@ export const BookingForm = ({ onSubmit, isPending, error}: BookingFormProps) => 
     const result = bookingSchema.safeParse({ guestName: name, roomNumber: room });
     
     if (!result.success) {
-      setLocalError(result.error.issues[0].message);
+      setLocalError(result.error.issues[0].message)
       return;
     }
     onSubmit({ guestName: name, roomNumber: room });
@@ -56,7 +56,7 @@ export const BookingForm = ({ onSubmit, isPending, error}: BookingFormProps) => 
         />
       </div>
 
-      {(error || localError) && <p className="m-0 text-left text-sm text-red-600">{error || localError}</p>}
+      {(error || localError) && <p className="text-left text-sm text-red-600">{error || localError}</p>}
 
       <div className="flex justify-end gap-2">
         <Button 

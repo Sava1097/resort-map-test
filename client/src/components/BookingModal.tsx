@@ -3,14 +3,14 @@ import { bookCabana} from "../api";
 import type { Tile } from "./ResortMap";
 import { BookingForm } from "./BookingForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { toast } from "sonner";
 
 type BookingModalProps = {
   selectedCabana: Tile;
   onClose: () => void;
-  onSuccess: (message: string) => void | Promise<void>;
 };
 
-export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModalProps) => {
+export const BookingModal = ({ selectedCabana, onClose }: BookingModalProps) => {
   const queryClient = useQueryClient();
   const MAP_QUERY_KEY = ["map-data"] as const;
 
@@ -24,8 +24,17 @@ export const BookingModal = ({ selectedCabana, onClose, onSuccess }: BookingModa
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MAP_QUERY_KEY });
-      await onSuccess("Booking completed!");
+      toast.success("Booking  completed!", {
+        description: "Cabana is yours!",
+        position: "top-right",
+      })
       onClose();
+    },
+    onError: () => {
+      toast.error("Booking failed!", {
+        description: "Something went wrong! Try again",
+        position: "top-right"
+      })
     }
   });
 

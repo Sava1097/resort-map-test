@@ -3,8 +3,12 @@ import ResortMap from "./components/ResortMap";
 import type { Tile } from "./components/ResortMap";
 import { BookingModal } from "./components/BookingModal";
 import { useMap } from "./hooks/useMap";
-import { FirstLoading } from "./components/FirstLoading";
-import { ScreenWrapper } from "./components/ScreenWrapper";
+import { FirstLoading } from "./components/layout/FirstLoading";
+import { ScreenWrapper } from "./components/layout/ScreenWrapper";
+import { MapTitle } from "./components/layout/MapTitle";
+import { MapDescription } from "./components/layout/MapDescription";
+import { MapErrorLoad } from "./components/layout/MapErrorLoad";
+import { MainLayoutContainer } from "./components/layout/MainLayoutContainer";
 
 function App() {
   const { tiles, mapWidth, isLoading, error } = useMap();
@@ -21,19 +25,15 @@ function App() {
   if (error) {
     return (
       <ScreenWrapper>
-        <div className="text-center p-10 bg-red-50 rounded-lg border border-red-200 mx-2">
-          <p className="flex justify-center items-center text-red-600 font-medium">Error loading map: {error}</p>
-        </div>
+        <MapErrorLoad message={error}/>
       </ScreenWrapper>
     )
   }
 
   return (
-    <main className="p-6 flex flex-col justify-center items-center gap-4">
-      <h1 className="text-4xl font-semibold">Resort Map</h1>
-      <p className="text-muted-foreground lg:text-xl">
-        <span>Cabana</span> | <span>Pool</span> | <span>Path</span> | <span>Chalet</span>
-      </p>
+    <MainLayoutContainer>
+      <MapTitle/>
+      <MapDescription/>
       <ResortMap
         width={mapWidth}
         tiles={tiles}
@@ -46,7 +46,7 @@ function App() {
           onClose={closeModal}
         />
       )}
-    </main>
+    </MainLayoutContainer>
   );
 }
 

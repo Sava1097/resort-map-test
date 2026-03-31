@@ -31,7 +31,7 @@ function validateGuest(bookings, room, guestName) {
   return bookings.some(
     (booking) =>
       booking.room === String(room).trim() &&
-      booking.guestName.toLowerCase() === String(guestName).trim().toLowerCase(),
+      booking.guestName.toLowerCase() === String(guestName).trim().toLowerCase()
   );
 }
 
@@ -107,10 +107,14 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
     try {
       const { map, bookings } = await loadData();
-      const tile = map.tiles.find((mapTile) => mapTile.x === x && mapTile.y === y);
+      const tile = map.tiles.find(
+        (mapTile) => mapTile.x === x && mapTile.y === y
+      );
 
       if (!tile || tile.type !== "W") {
-        return res.status(400).json({ error: "Selected tile is not a cabana." });
+        return res
+          .status(400)
+          .json({ error: "Selected tile is not a cabana." });
       }
 
       if (!validateGuest(bookings, room, guestName)) {
@@ -118,14 +122,14 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
       }
 
       const alreadyHasBooking = Array.from(bookedCabanas.values()).some(
-        (b) => 
-          b.room === String(room).trim() && 
+        (b) =>
+          b.room === String(room).trim() &&
           b.guestName.toLowerCase() === String(guestName).trim().toLowerCase()
-    );
+      );
 
       if (alreadyHasBooking) {
-        return res.status(400).json({ 
-          error: `Guest ${guestName} from room ${room} already has an active booking. One cabana per room/guest only.` 
+        return res.status(400).json({
+          error: `Guest ${guestName} from room ${room} already has an active booking. One cabana per room/guest only.`,
         });
       }
 
@@ -161,10 +165,14 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
     try {
       const { map, bookings } = await loadData();
-      const tile = map.tiles.find((mapTile) => mapTile.x === x && mapTile.y === y);
+      const tile = map.tiles.find(
+        (mapTile) => mapTile.x === x && mapTile.y === y
+      );
 
       if (!tile || tile.type !== "W") {
-        return res.status(400).json({ error: "Selected tile is not a cabana." });
+        return res
+          .status(400)
+          .json({ error: "Selected tile is not a cabana." });
       }
 
       if (!validateGuest(bookings, room, guestName)) {
@@ -179,7 +187,8 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
       const sameGuest =
         booking.room === String(room).trim() &&
-        booking.guestName.toLowerCase() === String(guestName).trim().toLowerCase();
+        booking.guestName.toLowerCase() ===
+          String(guestName).trim().toLowerCase();
 
       if (!sameGuest) {
         return res.status(401).json({

@@ -13,15 +13,15 @@ const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
       style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}
     >
       {tiles.map((tile) => (
-        <MapTile 
-          key={`${tile.x}-${tile.y}`} 
-          tile={tile} 
-          onClick={onCabanaClick} 
+        <MapTile
+          key={`${tile.x}-${tile.y}`}
+          tile={tile}
+          onClick={onCabanaClick}
         />
       ))}
     </div>
   );
-}
+};
 
 export type { Tile };
-export default ResortMap
+export default ResortMap;

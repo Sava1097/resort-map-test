@@ -14,26 +14,27 @@ function App() {
   const { tiles, mapWidth, isLoading, error } = useMap();
   const [selectedCabana, setSelectedCabana] = useState<Tile | null>(null);
 
-  const closeModal = () => setSelectedCabana(null)
+  const closeModal = () => setSelectedCabana(null);
 
-  if (isLoading) return (
-    <ScreenWrapper>
-      <FirstLoading/>
-    </ScreenWrapper>
-  )
+  if (isLoading)
+    return (
+      <ScreenWrapper>
+        <FirstLoading />
+      </ScreenWrapper>
+    );
 
   if (error) {
     return (
       <ScreenWrapper>
-        <MapErrorLoad message={error}/>
+        <MapErrorLoad message={error} />
       </ScreenWrapper>
-    )
+    );
   }
 
   return (
     <MainLayoutContainer>
-      <MapTitle/>
-      <MapDescription/>
+      <MapTitle />
+      <MapDescription />
       <ResortMap
         width={mapWidth}
         tiles={tiles}
@@ -41,10 +42,7 @@ function App() {
       />
 
       {selectedCabana && (
-        <BookingModal
-          selectedCabana={selectedCabana}
-          onClose={closeModal}
-        />
+        <BookingModal selectedCabana={selectedCabana} onClose={closeModal} />
       )}
     </MainLayoutContainer>
   );

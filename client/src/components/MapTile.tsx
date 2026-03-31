@@ -40,9 +40,11 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
   return (
     <button
       className={cn(
-        "aspect-square border border-black/15 flex items-center justify-center transition-all duration-200",
+        "flex aspect-square items-center justify-center border border-black/15 transition-all duration-200",
         isCabana ? "hover:scale-105" : "cursor-default",
-        isBookedCabana ? "bg-red-500 opacity-50 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+        isBookedCabana
+          ? "cursor-not-allowed bg-red-500 opacity-50"
+          : "bg-green-500 hover:bg-green-600"
       )}
       disabled={isBookedCabana}
       type="button"
@@ -55,7 +57,11 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
       }}
     >
       {imageSrc ? (
-        <img src={imageSrc} alt={tileLabel} className="h-full w-full object-cover" />
+        <img
+          src={imageSrc}
+          alt={tileLabel}
+          className="h-full w-full object-cover"
+        />
       ) : (
         <span>{tile.type}</span>
       )}

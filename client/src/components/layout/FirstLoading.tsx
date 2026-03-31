@@ -2,11 +2,11 @@ import { Loader2 } from "lucide-react";
 
 export const FirstLoading = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-2 md:mt-3">
-      <Loader2 className="h-10 w-10 md:h-15 md:w-15 animate-spin text-primary" />
-      <p className="text-sm md:text-xl text-muted-foreground animate-pulse">
+    <div className="flex w-full flex-col items-center justify-center gap-2 md:mt-3">
+      <Loader2 className="text-primary h-10 w-10 animate-spin md:h-15 md:w-15" />
+      <p className="text-muted-foreground animate-pulse text-sm md:text-xl">
         Loading map...
       </p>
     </div>
-  )
-}
+  );
+};

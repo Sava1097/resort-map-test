@@ -6,7 +6,9 @@
   "scripts": {
     "client": "npm run dev --prefix client",
     "server": "npm run dev --prefix server",
-    "start": "node scripts/start.js"
+    "start": "node scripts/start.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "keywords": [],
   "author": "",
@@ -14,5 +16,9 @@
   "type": "commonjs",
   "dependencies": {
     "concurrently": "^9.2.1"
+  },
+  "devDependencies": {
+    "prettier": "3.8.1",
+    "prettier-plugin-tailwindcss": "0.7.2"
   }
 }

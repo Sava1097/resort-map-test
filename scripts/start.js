@@ -16,7 +16,10 @@ const mapArg = readArgValue("--map");
 const bookingsArg = readArgValue("--bookings");
 
 const mapPath = path.resolve(process.cwd(), mapArg ?? "map.ascii");
-const bookingsPath = path.resolve(process.cwd(), bookingsArg ?? "bookings.json");
+const bookingsPath = path.resolve(
+  process.cwd(),
+  bookingsArg ?? "bookings.json"
+);
 
 concurrently(
   [
@@ -33,7 +36,7 @@ concurrently(
   ],
   {
     killOthersOn: ["failure", "success"],
-  },
+  }
 ).result.catch(() => {
   process.exit(1);
 });

@@ -10,4 +10,3 @@ export const bookingSchema = z.object({
 });
 
 export type BookingValues = z.infer<typeof bookingSchema>;
-

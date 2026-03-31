@@ -26,7 +26,7 @@ describe("booking API", () => {
     expect(mapResponse.status).toBe(200);
 
     const bookedTile = mapResponse.body.map.tiles.find(
-      (tile) => tile.x === targetX && tile.y === targetY,
+      (tile) => tile.x === targetX && tile.y === targetY
     );
 
     expect(bookedTile.type).toBe("W");
@@ -73,7 +73,7 @@ describe("booking API", () => {
 
     const mapResponse = await request(app).get("/api/map-data");
     const tile = mapResponse.body.map.tiles.find(
-      (mapTile) => mapTile.x === targetX && mapTile.y === targetY,
+      (mapTile) => mapTile.x === targetX && mapTile.y === targetY
     );
 
     expect(tile.booked).toBe(false);
@@ -102,7 +102,7 @@ describe("booking API", () => {
 
     expect(cancelResponse.status).toBe(401);
     expect(cancelResponse.body.error).toBe(
-      "Only the guest who booked this cabana can cancel it.",
+      "Only the guest who booked this cabana can cancel it."
     );
   });
 });

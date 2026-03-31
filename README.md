@@ -3,6 +3,7 @@
 An interactive web app for rendering a resort map and handling cabana booking/cancellation.
 
 Stack:
+
 - Frontend: React + Vite + TypeScript
 - Backend: Node.js + Express
 - Backend tests: Vitest + Supertest
@@ -53,6 +54,7 @@ npm run start
 This command starts both frontend and backend.
 
 Default input files:
+
 - `map.ascii`
 - `bookings.json`
 
@@ -70,9 +72,11 @@ npm run start -- --map ./map.ascii --bookings ./bookings.json
 ## API
 
 ### `GET /api/health`
+
 Simple server health check endpoint.
 
 ### `GET /api/map-data`
+
 Returns map data with current cabana availability.
 
 Example cabana tile payload:
@@ -90,6 +94,7 @@ Example cabana tile payload:
 ```
 
 ### `POST /api/book`
+
 Creates a cabana booking.
 
 Request body:
@@ -104,11 +109,13 @@ Request body:
 ```
 
 Validation rules:
+
 - guest must exist in `bookings.json`;
 - selected tile must be a cabana (`W`);
 - cabana must not already be booked.
 
 ### `DELETE /api/book`
+
 Cancels an existing cabana booking.
 
 Request body:
@@ -123,6 +130,7 @@ Request body:
 ```
 
 Validation rules:
+
 - guest must exist in `bookings.json`;
 - only the same guest who created the booking can cancel it.
 
@@ -135,6 +143,7 @@ npm run test --prefix server
 ```
 
 Covered scenarios:
+
 - successful booking;
 - booking rejection for unknown guest;
 - successful cancellation;

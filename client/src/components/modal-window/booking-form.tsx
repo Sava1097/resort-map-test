@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { bookingSchema, type BookingValues } from '@/lib/validations';
+import { FormLayout } from './form-layout';
 
 type BookingFormProps = {
   onSubmit: (data: BookingValues) => void;
@@ -39,7 +40,7 @@ export const BookingForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 py-2">
-      <div className="flex flex-col gap-2.5">
+      <FormLayout>
         <Label className="text-xl" htmlFor="guest-name">
           Guest Name
         </Label>
@@ -50,8 +51,8 @@ export const BookingForm = ({
           placeholder="Enter full name"
           required
         />
-      </div>
-      <div className="flex flex-col gap-2.5">
+      </FormLayout>
+      <FormLayout>
         <Label className="text-xl" htmlFor="room-number">
           Room Number
         </Label>
@@ -62,7 +63,7 @@ export const BookingForm = ({
           placeholder="Enter room"
           required
         />
-      </div>
+      </FormLayout>
 
       {(error || localError) && (
         <p className="text-left text-sm text-red-600">{error || localError}</p>

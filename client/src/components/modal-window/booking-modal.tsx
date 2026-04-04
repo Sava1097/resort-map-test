@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { bookCabana } from '../../api';
 import type { Tile } from '../map/map-tile';
 import { BookingForm } from './booking-form';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle } from '../ui/dialog';
 import { toast } from 'sonner';
 
 const MAP_QUERY_KEY = ['map-data'] as const;
@@ -49,6 +49,9 @@ export const BookingModal = ({
           <DialogTitle className="text-center text-xl font-semibold">
             Book cabana ({selectedCabana.x}, {selectedCabana.y})
           </DialogTitle>
+          <DialogDescription className='text-center'>
+            Please enter your details for booking.
+          </DialogDescription>
         </DialogHeader>
         <BookingForm
           onSubmit={(data) => bookMutation.mutate(data)}

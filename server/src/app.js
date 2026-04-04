@@ -10,11 +10,12 @@ function parseMapToTiles(mapText) {
     .filter((line) => line.length > 0);
   const tiles = [];
 
-  rows.forEach((row, y) => {
-    [...row].forEach((tileType, x) => {
-      tiles.push({ x, y, type: tileType });
-    });
-  });
+  for (let y = 0; y < rows.length; y++) {
+    const row = rows[y];
+    for (let x = 0; x < row.length; x++) {
+      tiles.push({ x, y, type: row[x] });
+    }
+  }
 
   return {
     width: rows[0]?.length ?? 0,
@@ -38,21 +39,26 @@ function validateGuest(bookings, room, guestName) {
 function createApp({ mapPath, bookingsPath, assetsDir }) {
   const app = express();
   const bookedCabanas = new Map();
+  let cashedData = null
 
   app.use(cors());
   app.use(express.json());
   app.use('/assets', express.static(assetsDir));
 
   async function loadData() {
+    if (cashedData) return cashedData;
+
     const [mapText, bookingsText] = await Promise.all([
       fs.readFile(mapPath, 'utf8'),
       fs.readFile(bookingsPath, 'utf8'),
     ]);
 
-    return {
+    cashedData = {
       map: parseMapToTiles(mapText),
       bookings: JSON.parse(bookingsText),
     };
+
+    return cashedData
   }
 
   function mapWithBookingStatus(map) {
@@ -147,58 +153,6 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
     } catch (error) {
       return res.status(500).json({
         error: 'Failed to process booking.',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
-  });
-
-  app.delete('/api/book', async (req, res) => {
-    const { room, guestName, x, y } = req.body ?? {};
-
-    if (!room || !guestName || !Number.isInteger(x) || !Number.isInteger(y)) {
-      return res.status(400).json({
-        error: 'room, guestName, x and y are required.',
-      });
-    }
-
-    try {
-      const { map, bookings } = await loadData();
-      const tile = map.tiles.find(
-        (mapTile) => mapTile.x === x && mapTile.y === y
-      );
-
-      if (!tile || tile.type !== 'W') {
-        return res
-          .status(400)
-          .json({ error: 'Selected tile is not a cabana.' });
-      }
-
-      if (!validateGuest(bookings, room, guestName)) {
-        return res.status(401).json({ error: 'Guest not found.' });
-      }
-
-      const key = bookingKey(x, y);
-      const booking = bookedCabanas.get(key);
-      if (!booking) {
-        return res.status(400).json({ error: 'Cabana is not booked.' });
-      }
-
-      const sameGuest =
-        booking.room === String(room).trim() &&
-        booking.guestName.toLowerCase() ===
-          String(guestName).trim().toLowerCase();
-
-      if (!sameGuest) {
-        return res.status(401).json({
-          error: 'Only the guest who booked this cabana can cancel it.',
-        });
-      }
-
-      bookedCabanas.delete(key);
-      return res.json({ success: true, message: 'Booking cancelled.' });
-    } catch (error) {
-      return res.status(500).json({
-        error: 'Failed to cancel booking.',
         details: error instanceof Error ? error.message : 'Unknown error',
       });
     }

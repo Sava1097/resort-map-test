@@ -1,4 +1,4 @@
-import { MapTile, type Tile } from "./MapTile";
+import { MapTile, type Tile } from './map-tile';
 
 type ResortMapProps = {
   width: number;
@@ -6,7 +6,7 @@ type ResortMapProps = {
   onCabanaClick: (tile: Tile) => void;
 };
 
-const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
+export const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
   return (
     <div
       className="mx-auto grid w-full max-w-[980px] gap-2"
@@ -22,6 +22,3 @@ const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
     </div>
   );
 };
-
-export type { Tile };
-export default ResortMap;

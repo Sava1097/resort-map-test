@@ -1,0 +1,77 @@
+import { cn } from '../../lib/utils';
+import { env } from '../../env';
+
+export type Tile = {
+  x: number;
+  y: number;
+  type: string;
+  booked?: boolean;
+  status?: 'available' | 'booked';
+  bookedByGuestName?: string | null;
+  bookedByRoom?: string | null;
+};
+
+type MapTileProps = {
+  tile: Tile;
+  onClick: (tile: Tile) => void;
+}
+
+function assetUrl(file: string) {
+  const base = env.VITE_API_BASE_URL.replace(/\/$/, '');
+  return `${base}/assets/${file}`;
+}
+
+const tileImageFiles: Record<string, string> = {
+  W: 'cabana.png',
+  p: 'pool.png',
+  '#': 'arrowStraight.png',
+  c: 'houseChimney.png',
+  '.': 'parchmentBasic.png',
+};
+
+const tileLabelMap: Record<string, string> = {
+  W: 'Cabana',
+  p: 'Pool',
+  '#': 'Path',
+  c: 'Chalet',
+  '.': 'Empty',
+};
+
+export const MapTile = ({ tile, onClick }: MapTileProps) => {
+  const tileLabel = tileLabelMap[tile.type] ?? 'Unknown';
+  const isCabana = tile.type === 'W';
+  const isBookedCabana = isCabana && tile.booked;
+  const imageFile = tileImageFiles[tile.type];
+  const imageSrc = imageFile ? assetUrl(imageFile) : undefined;
+
+  return (
+    <button
+      className={cn(
+        'flex aspect-square items-center justify-center border border-black/15 transition-all duration-200',
+        isCabana ? 'hover:scale-105' : 'cursor-default',
+        isBookedCabana
+          ? 'cursor-not-allowed bg-red-500 opacity-80 hover:opacity-100'
+          : 'bg-green-500 hover:bg-green-600'
+      )}
+      type="button"
+      disabled={isBookedCabana}
+      title={isBookedCabana ? 'Booked' : undefined}
+      aria-label={`${tileLabel} at (${tile.x}, ${tile.y})`}
+      onClick={() => {
+        if (isCabana) {
+          onClick(tile);
+        }
+      }}
+    >
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt={tileLabel}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <span>{tile.type}</span>
+      )}
+    </button>
+  );
+};

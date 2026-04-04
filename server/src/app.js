@@ -1,12 +1,12 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
-const express = require("express");
-const cors = require("cors");
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const express = require('express');
+const cors = require('cors');
 
 function parseMapToTiles(mapText) {
   const rows = mapText
-    .replace(/\r/g, "")
-    .split("\n")
+    .replace(/\r/g, '')
+    .split('\n')
     .filter((line) => line.length > 0);
   const tiles = [];
 
@@ -41,12 +41,12 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
   app.use(cors());
   app.use(express.json());
-  app.use("/assets", express.static(assetsDir));
+  app.use('/assets', express.static(assetsDir));
 
   async function loadData() {
     const [mapText, bookingsText] = await Promise.all([
-      fs.readFile(mapPath, "utf8"),
-      fs.readFile(bookingsPath, "utf8"),
+      fs.readFile(mapPath, 'utf8'),
+      fs.readFile(bookingsPath, 'utf8'),
     ]);
 
     return {
@@ -59,7 +59,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
     return {
       ...map,
       tiles: map.tiles.map((tile) => {
-        if (tile.type !== "W") {
+        if (tile.type !== 'W') {
           return tile;
         }
 
@@ -68,7 +68,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
         return {
           ...tile,
           booked,
-          status: booked ? "booked" : "available",
+          status: booked ? 'booked' : 'available',
           bookedByGuestName: booking?.guestName ?? null,
           bookedByRoom: booking?.room ?? null,
         };
@@ -76,32 +76,30 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
     };
   }
 
-  app.get("/api/health", (_req, res) => {
+  app.get('/api/health', (_req, res) => {
     res.json({ ok: true });
   });
 
-  app.get("/api/map-data", async (_req, res) => {
+  app.get('/api/map-data', async (_req, res) => {
     try {
       const { map } = await loadData();
       res.json({
-        mapPath,
-        bookingsPath,
         map: mapWithBookingStatus(map),
       });
     } catch (error) {
       res.status(500).json({
-        error: "Failed to read map/bookings files.",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to read map/bookings files.',
+        details: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   });
 
-  app.post("/api/book", async (req, res) => {
+  app.post('/api/book', async (req, res) => {
     const { room, guestName, x, y } = req.body ?? {};
 
     if (!room || !guestName || !Number.isInteger(x) || !Number.isInteger(y)) {
       return res.status(400).json({
-        error: "room, guestName, x and y are required.",
+        error: 'room, guestName, x and y are required.',
       });
     }
 
@@ -111,14 +109,14 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
         (mapTile) => mapTile.x === x && mapTile.y === y
       );
 
-      if (!tile || tile.type !== "W") {
+      if (!tile || tile.type !== 'W') {
         return res
           .status(400)
-          .json({ error: "Selected tile is not a cabana." });
+          .json({ error: 'Selected tile is not a cabana.' });
       }
 
       if (!validateGuest(bookings, room, guestName)) {
-        return res.status(401).json({ error: "Guest not found." });
+        return res.status(401).json({ error: 'Guest not found.' });
       }
 
       const alreadyHasBooking = Array.from(bookedCabanas.values()).some(
@@ -135,7 +133,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
       const key = bookingKey(x, y);
       if (bookedCabanas.has(key)) {
-        return res.status(400).json({ error: "Cabana is already booked." });
+        return res.status(400).json({ error: 'Cabana is already booked.' });
       }
 
       bookedCabanas.set(key, {
@@ -148,18 +146,18 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
       });
     } catch (error) {
       return res.status(500).json({
-        error: "Failed to process booking.",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to process booking.',
+        details: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   });
 
-  app.delete("/api/book", async (req, res) => {
+  app.delete('/api/book', async (req, res) => {
     const { room, guestName, x, y } = req.body ?? {};
 
     if (!room || !guestName || !Number.isInteger(x) || !Number.isInteger(y)) {
       return res.status(400).json({
-        error: "room, guestName, x and y are required.",
+        error: 'room, guestName, x and y are required.',
       });
     }
 
@@ -169,20 +167,20 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
         (mapTile) => mapTile.x === x && mapTile.y === y
       );
 
-      if (!tile || tile.type !== "W") {
+      if (!tile || tile.type !== 'W') {
         return res
           .status(400)
-          .json({ error: "Selected tile is not a cabana." });
+          .json({ error: 'Selected tile is not a cabana.' });
       }
 
       if (!validateGuest(bookings, room, guestName)) {
-        return res.status(401).json({ error: "Guest not found." });
+        return res.status(401).json({ error: 'Guest not found.' });
       }
 
       const key = bookingKey(x, y);
       const booking = bookedCabanas.get(key);
       if (!booking) {
-        return res.status(400).json({ error: "Cabana is not booked." });
+        return res.status(400).json({ error: 'Cabana is not booked.' });
       }
 
       const sameGuest =
@@ -192,16 +190,16 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
 
       if (!sameGuest) {
         return res.status(401).json({
-          error: "Only the guest who booked this cabana can cancel it.",
+          error: 'Only the guest who booked this cabana can cancel it.',
         });
       }
 
       bookedCabanas.delete(key);
-      return res.json({ success: true, message: "Booking cancelled." });
+      return res.json({ success: true, message: 'Booking cancelled.' });
     } catch (error) {
       return res.status(500).json({
-        error: "Failed to cancel booking.",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to cancel booking.',
+        details: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   });
@@ -213,7 +211,7 @@ function createDefaultApp(cliArgs) {
   return createApp({
     mapPath: path.resolve(cliArgs.map),
     bookingsPath: path.resolve(cliArgs.bookings),
-    assetsDir: path.resolve(__dirname, "../../assets"),
+    assetsDir: path.resolve(__dirname, '../../client/public/assets'),
   });
 }
 

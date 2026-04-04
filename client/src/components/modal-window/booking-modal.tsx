@@ -1,9 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { bookCabana } from "../api";
-import type { Tile } from "./ResortMap";
-import { BookingForm } from "./BookingForm";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { toast } from "sonner";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { bookCabana } from '../../api';
+import type { Tile } from '../map/map-tile';
+import { BookingForm } from './booking-form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { toast } from 'sonner';
+
+const MAP_QUERY_KEY = ['map-data'] as const;
 
 type BookingModalProps = {
   selectedCabana: Tile;
@@ -15,9 +17,8 @@ export const BookingModal = ({
   onClose,
 }: BookingModalProps) => {
   const queryClient = useQueryClient();
-  const MAP_QUERY_KEY = ["map-data"] as const;
 
-  const mutation = useMutation({
+  const bookMutation = useMutation({
     mutationFn: (data: { guestName: string; roomNumber: string }) =>
       bookCabana({
         guestName: data.guestName,
@@ -27,33 +28,35 @@ export const BookingModal = ({
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MAP_QUERY_KEY });
-      toast.success("Booking  completed!", {
-        description: "Cabana is yours!",
-        position: "top-right",
+      toast.success('Booking completed!', {
+        description: 'Cabana is yours!',
+        position: 'top-right',
       });
       onClose();
     },
-    onError: () => {
-      toast.error("Booking failed!", {
-        description: "Something went wrong! Try again",
-        position: "top-right",
+    onError: (err: Error) => {
+      toast.error('Booking failed!', {
+        description: err.message,
+        position: 'top-right',
       });
     },
   });
 
   return (
     <Dialog open={!!selectedCabana} onOpenChange={() => onClose()}>
-      <DialogContent className="lg: p-5">
+      <DialogContent className="lg:p-5">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-semibold">
             Book cabana ({selectedCabana.x}, {selectedCabana.y})
           </DialogTitle>
         </DialogHeader>
         <BookingForm
-          onSubmit={(data) => mutation.mutate(data)}
-          isPending={mutation.isPending}
+          onSubmit={(data) => bookMutation.mutate(data)}
+          isPending={bookMutation.isPending}
           error={
-            mutation.error instanceof Error ? mutation.error.message : null
+            bookMutation.error instanceof Error
+              ? bookMutation.error.message
+              : null
           }
         />
       </DialogContent>

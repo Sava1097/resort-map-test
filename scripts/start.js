@@ -1,5 +1,5 @@
-const path = require("node:path");
-const { concurrently } = require("concurrently");
+const path = require('node:path');
+const { concurrently } = require('concurrently');
 
 function readArgValue(flagName) {
   const args = process.argv.slice(2);
@@ -12,30 +12,30 @@ function readArgValue(flagName) {
   return args[index + 1];
 }
 
-const mapArg = readArgValue("--map");
-const bookingsArg = readArgValue("--bookings");
+const mapArg = readArgValue('--map');
+const bookingsArg = readArgValue('--bookings');
 
-const mapPath = path.resolve(process.cwd(), mapArg ?? "map.ascii");
+const mapPath = path.resolve(process.cwd(), mapArg ?? 'map.ascii');
 const bookingsPath = path.resolve(
   process.cwd(),
-  bookingsArg ?? "bookings.json"
+  bookingsArg ?? 'server/bookings.json'
 );
 
 concurrently(
   [
     {
-      command: "npm run dev --prefix client",
-      name: "client",
-      prefixColor: "blue",
+      command: 'npm run dev -w client',
+      name: 'client',
+      prefixColor: 'blue',
     },
     {
-      command: `npm run dev --prefix server -- --map "${mapPath}" --bookings "${bookingsPath}"`,
-      name: "server",
-      prefixColor: "green",
+      command: `npm run dev -w server -- --map "${mapPath}" --bookings "${bookingsPath}"`,
+      name: 'server',
+      prefixColor: 'green',
     },
   ],
   {
-    killOthersOn: ["failure", "success"],
+    killOthersOn: ['failure', 'success'],
   }
 ).result.catch(() => {
   process.exit(1);

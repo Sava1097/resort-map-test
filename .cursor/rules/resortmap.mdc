@@ -1,0 +1,13 @@
+---
+description: ResortMap project conventions for client and shared patterns
+globs: "**/*.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+# ResortMap
+
+- Prefer **named exports** for React components in `client/src` (e.g. `export const App`, `export const ResortMap`). Keep Vite/ESLint config default exports as usual.
+- **File names**: kebab-case for app and feature files under `client/src` (e.g. `resort-map.tsx`, `use-map.ts`).
+- **Environment**: read validated config from `client/src/env.ts` (Zod). Do not read `import.meta.env` for API base URL outside that module.
+- **Quotes / format**: follow Prettier in repo root (single quotes for JS/TS).
+- **Server**: Express app factory in `server/src/app.js` (`createApp`); keep tests in `server/src/app.test.js` using Supertest.

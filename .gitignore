@@ -3,6 +3,10 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
+# Vite
+.vite/
+client/.vite/
+
 # Build outputs
 dist/
 build/

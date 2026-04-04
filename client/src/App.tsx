@@ -1,16 +1,16 @@
-import { useState } from "react";
-import ResortMap from "./components/ResortMap";
-import type { Tile } from "./components/ResortMap";
-import { BookingModal } from "./components/BookingModal";
-import { useMap } from "./hooks/useMap";
-import { FirstLoading } from "./components/layout/FirstLoading";
-import { ScreenWrapper } from "./components/layout/ScreenWrapper";
-import { MapTitle } from "./components/layout/MapTitle";
-import { MapDescription } from "./components/layout/MapDescription";
-import { MapErrorLoad } from "./components/layout/MapErrorLoad";
-import { MainLayoutContainer } from "./components/layout/MainLayoutContainer";
+import { useState } from 'react';
+import { ResortMap } from './components/map/resort-map';
+import type { Tile } from './components/map/map-tile';
+import { BookingModal } from './components/modal-window/booking-modal';
+import { useMap } from './hooks/use-map';
+import { FirstLoading } from './components/layout/first-loading';
+import { ScreenWrapper } from './components/layout/screen-wrapper';
+import { MapTitle } from './components/layout/map-title';
+import { MapDescription } from './components/layout/map-description';
+import { MapErrorLoad } from './components/layout/map-error-load';
+import { MainLayoutContainer } from './components/layout/main-layout-container';
 
-function App() {
+export const App = () => {
   const { tiles, mapWidth, isLoading, error } = useMap();
   const [selectedCabana, setSelectedCabana] = useState<Tile | null>(null);
 
@@ -46,6 +46,4 @@ function App() {
       )}
     </MainLayoutContainer>
   );
-}
-
-export default App;
+};

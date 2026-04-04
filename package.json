@@ -2,11 +2,19 @@
   "name": "resortmapcodetest",
   "version": "1.0.0",
   "description": "Resort map coding test monorepo",
+  "private": true,
   "main": "scripts/start.js",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "client": "npm run dev --prefix client",
-    "server": "npm run dev --prefix server",
+    "client": "npm run dev -w client",
+    "server": "npm run dev -w server",
     "start": "node scripts/start.js",
+    "test": "npm run test -w server",
+    "lint": "npm run lint -w client",
+    "build": "npm run build -w client",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -15,10 +23,16 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@rolldown/binding-darwin-arm64": "1.0.0-rc.12",
     "concurrently": "^9.2.1"
   },
   "devDependencies": {
     "prettier": "3.8.1",
     "prettier-plugin-tailwindcss": "0.7.2"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-x64": "1.0.0-rc.12",
+    "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.12",
+    "@rolldown/binding-win32-x64-msvc": "1.0.0-rc.12"
   }
 }

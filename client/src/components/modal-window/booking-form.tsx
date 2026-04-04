@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { bookingSchema, type BookingValues } from "@/lib/validations";
+import { useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { bookingSchema, type BookingValues } from '@/lib/validations';
 
-interface BookingFormProps {
+type BookingFormProps = {
   onSubmit: (data: BookingValues) => void;
   isPending: boolean;
   error: string | null;
@@ -15,8 +15,8 @@ export const BookingForm = ({
   isPending,
   error,
 }: BookingFormProps) => {
-  const [name, setName] = useState("");
-  const [room, setRoom] = useState("");
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -74,7 +74,7 @@ export const BookingForm = ({
           type="submit"
           disabled={isPending}
         >
-          {isPending ? "Booking..." : "Submit"}
+          {isPending ? 'Booking...' : 'Submit'}
         </Button>
       </div>
     </form>

@@ -1,18 +1,18 @@
-const path = require("node:path");
-const yargs = require("yargs/yargs");
-const { hideBin } = require("yargs/helpers");
-const { createDefaultApp } = require("./app");
+const path = require('node:path');
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const { createDefaultApp } = require('./app');
 
 const argv = yargs(hideBin(process.argv))
-  .option("map", {
-    type: "string",
-    default: "map.ascii",
-    describe: "Path to ASCII resort map file",
+  .option('map', {
+    type: 'string',
+    default: 'map.ascii',
+    describe: 'Path to ASCII resort map file',
   })
-  .option("bookings", {
-    type: "string",
-    default: "bookings.json",
-    describe: "Path to bookings JSON file",
+  .option('bookings', {
+    type: 'string',
+    default: 'server/bookings.json',
+    describe: 'Path to bookings JSON file',
   })
   .strict()
   .parseSync();

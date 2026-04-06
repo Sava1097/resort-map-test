@@ -29,7 +29,7 @@ Stack:
 - Renders the resort map with CSS Grid.
 - Cabana interactions:
   - available cabana -> booking form;
-- **Visual Differentiation:**  - 🟢 **Green**: Available Cabanas
+- **Visual Differentiation:** - 🟢 **Green**: Available Cabanas
   - 🔴 **Red**: Booked Cabanas
   - 🔵 **Blue**: Pools
   - 🟠 **Yellow**: Chalets (Houses)

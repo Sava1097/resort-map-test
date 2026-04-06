@@ -8,10 +8,13 @@ type ResortMapProps = {
 
 export const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
   return (
-    <div className='w-full overflow-x-auto max-w-[980px] mx-auto'>
+    <div className="mx-auto w-full max-w-[980px] overflow-x-auto">
       <div
         className="grid w-full gap-1 md:gap-2"
-        style={{ gridTemplateColumns: `repeat(${width}, 1fr)`, minWidth: `${width * 35}px` }}
+        style={{
+          gridTemplateColumns: `repeat(${width}, 1fr)`,
+          minWidth: `${width * 35}px`,
+        }}
       >
         {tiles.map((tile) => (
           <MapTile
@@ -22,6 +25,5 @@ export const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
         ))}
       </div>
     </div>
-  
   );
 };

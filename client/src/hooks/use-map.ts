@@ -13,8 +13,8 @@ export function useMap() {
     queryFn: fetchMapData,
     select: (data) => ({
       tiles: data.map.tiles as Tile[],
-      width: data.map.width
-    })
+      width: data.map.width,
+    }),
   });
 
   const refreshMap = useCallback(() => {
@@ -25,7 +25,7 @@ export function useMap() {
     error instanceof Error ? error.message : error ? String(error) : null;
 
   return {
-    tiles: data?.tiles?? [],
+    tiles: data?.tiles ?? [],
     mapWidth: data?.width ?? 0,
     isLoading,
     error: errorMessage,

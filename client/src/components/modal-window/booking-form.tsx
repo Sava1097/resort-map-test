@@ -9,7 +9,7 @@ type BookingFormProps = {
   onSubmit: (data: BookingValues) => void;
   isPending: boolean;
   error: string | null;
-}
+};
 
 export const BookingForm = ({
   onSubmit,

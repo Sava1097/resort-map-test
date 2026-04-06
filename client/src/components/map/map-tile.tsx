@@ -14,12 +14,12 @@ export type Tile = {
 type MapTileProps = {
   tile: Tile;
   onClick: (tile: Tile) => void;
-}
+};
 
 const assetUrl = (file: string) => {
   const base = env.VITE_API_BASE_URL.replace(/\/$/, '');
   return `${base}/assets/${file}`;
-}
+};
 
 const tileImageFiles: Record<string, string> = {
   W: 'cabana.png',
@@ -39,11 +39,11 @@ const tileLabelMap: Record<string, string> = {
 
 export const MapTile = ({ tile, onClick }: MapTileProps) => {
   const tileLabel = tileLabelMap[tile.type] ?? 'Unknown';
-  
+
   const isCabana = tile.type === 'W';
   const isPool = tile.type === 'p';
   const isChalet = tile.type === 'c';
-  
+
   const isBookedCabana = isCabana && tile.booked;
   const imageFile = tileImageFiles[tile.type];
   const imageSrc = imageFile ? assetUrl(imageFile) : undefined;
@@ -52,12 +52,12 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
     <button
       className={cn(
         'flex aspect-square items-center justify-center border border-black/15 transition-all duration-200',
-        isCabana ? 'hover:scale-105 touch-manipulation' : 'cursor-default',
-        isBookedCabana 
-          ? 'bg-red-600 cursor-not-allowed hover:bg-red-700 opacity-80' 
-          : isCabana 
+        isCabana ? 'touch-manipulation hover:scale-105' : 'cursor-default',
+        isBookedCabana
+          ? 'cursor-not-allowed bg-red-600 opacity-80 hover:bg-red-700'
+          : isCabana
             ? 'bg-green-500 hover:bg-green-600'
-            : isPool 
+            : isPool
               ? 'bg-sky-400'
               : isChalet
                 ? 'bg-yellow-400'
@@ -77,7 +77,7 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
         <img
           src={imageSrc}
           alt={tileLabel}
-          className="h-full w-full object-cover rounded-sm shadow-sm"
+          className="h-full w-full rounded-sm object-cover shadow-sm"
         />
       ) : (
         <span>{tile.type}</span>

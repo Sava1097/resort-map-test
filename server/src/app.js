@@ -39,7 +39,7 @@ function validateGuest(bookings, room, guestName) {
 function createApp({ mapPath, bookingsPath, assetsDir }) {
   const app = express();
   const bookedCabanas = new Map();
-  let cashedData = null
+  let cashedData = null;
 
   app.use(cors());
   app.use(express.json());
@@ -58,7 +58,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
       bookings: JSON.parse(bookingsText),
     };
 
-    return cashedData
+    return cashedData;
   }
 
   function mapWithBookingStatus(map) {

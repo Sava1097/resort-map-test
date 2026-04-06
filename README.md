@@ -19,7 +19,7 @@ Stack:
 <p align="center">
   <img src="./client/public/screenshots/tablet-layout.png" width="300" alt="Tablet Layout">
   <img src="./client/public/screenshots/mobile-layout.png" width="250" alt="Mobile Layout">
-  <img src="./client/public/screenshots/modal-layout.png" width="250пше" alt="Booking Modal">
+  <img src="./client/public/screenshots/modal-layout.png" width="250" alt="Booking Modal">
 </p>
 
 ## Implemented Features

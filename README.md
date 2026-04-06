@@ -5,8 +5,22 @@ An interactive web app for rendering a resort map and handling cabana booking.
 Stack:
 
 - Frontend: React + Vite + TypeScript
+- Styling: Tailwind CSS + Shadcn UI
+- State Management: TanStack Query (React Query)
 - Backend: Node.js + Express
 - Backend tests: Vitest + Supertest
+
+## UI Preview
+
+<p align="center">
+  <img src="./client/public/screenshots/lg-layout.png" width="800" alt="Desktop Layout">
+</p>
+
+<p align="center">
+  <img src="./client/public/screenshots/tablet-layout.png" width="300" alt="Tablet Layout">
+  <img src="./client/public/screenshots/mobile-layout.png" width="250" alt="Mobile Layout">
+  <img src="./client/public/screenshots/modal-layout.png" width="250пше" alt="Booking Modal">
+</p>
 
 ## Implemented Features
 
@@ -15,8 +29,10 @@ Stack:
 - Renders the resort map with CSS Grid.
 - Cabana interactions:
   - available cabana -> booking form;
-  - booked cabana -> booking info.
-- Visual differentiation for booked cabanas.
+- **Visual Differentiation:**  - 🟢 **Green**: Available Cabanas
+  - 🔴 **Red**: Booked Cabanas
+  - 🔵 **Blue**: Pools
+  - 🟠 **Yellow**: Chalets (Houses)
 - In-memory booking storage on the backend (no database / no persistence).
 
 ## Project Structure

@@ -39,14 +39,14 @@ function validateGuest(bookings, room, guestName) {
 function createApp({ mapPath, bookingsPath, assetsDir }) {
   const app = express();
   const bookedCabanas = new Map();
-  let cashedData = null;
+  let cachedData = null;
 
   app.use(cors());
   app.use(express.json());
   app.use('/assets', express.static(assetsDir));
 
   async function loadData() {
-    if (cashedData) return cashedData;
+    if (cachedData) return cachedData;
 
     const [mapText, bookingsText] = await Promise.all([
       fs.readFile(mapPath, 'utf8'),
@@ -58,7 +58,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
       bookings: JSON.parse(bookingsText),
     };
 
-    return cashedData;
+    return cachedData;
   }
 
   function mapWithBookingStatus(map) {

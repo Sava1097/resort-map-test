@@ -51,12 +51,12 @@ export const MapTile = ({ tile, onClick }: MapTileProps) => {
   return (
     <button
       className={cn(
-        'flex aspect-square items-center justify-center border border-black/50 transition-all duration-400 outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
+        'focus-visible:border-ring focus-visible:ring-ring/50 flex aspect-square items-center justify-center border border-black/50 transition-all duration-400 outline-none focus-visible:ring-3',
         isCabana ? 'touch-manipulation hover:scale-105' : 'cursor-default',
         isBookedCabana
           ? 'cursor-not-allowed bg-red-600 opacity-80 hover:bg-red-700'
           : isCabana
-            ? 'bg-green-500 hover:bg-green-600 focus-visible:ring-ring/90'
+            ? 'focus-visible:ring-ring/90 bg-green-500 hover:bg-green-600'
             : isPool
               ? 'bg-sky-400'
               : isChalet

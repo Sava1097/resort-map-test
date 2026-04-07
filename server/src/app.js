@@ -53,7 +53,7 @@ function createApp({ mapPath, bookingsPath, assetsDir }) {
       fs.readFile(bookingsPath, 'utf8'),
     ]);
 
-    cashedData = {
+    cachedData = {
       map: parseMapToTiles(mapText),
       bookings: JSON.parse(bookingsText),
     };

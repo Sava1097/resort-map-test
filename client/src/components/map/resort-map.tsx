@@ -8,7 +8,7 @@ type ResortMapProps = {
 
 export const ResortMap = ({ width, tiles, onCabanaClick }: ResortMapProps) => {
   return (
-    <div className="mx-auto w-full max-w-[980px] overflow-x-auto">
+    <div className="mx-auto w-full max-w-[980px] overflow-x-auto p-1 md:p-2">
       <div
         className="grid w-full gap-1 md:gap-2"
         style={{
